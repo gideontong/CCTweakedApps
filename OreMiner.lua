@@ -1,5 +1,5 @@
 --------------------------------------------------
--- Diamond Miner 1.0
+-- Ore Miner 1.0
 -- Relies on the vanilla distribution of diamonds.
 -- (C) Gideon Tong 2024
 --------------------------------------------------
