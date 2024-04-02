@@ -1,8 +1,8 @@
---------------------------------------------------
+------------------------------
 -- Ore Miner 1.0
--- Relies on the vanilla distribution of diamonds.
--- (C) Gideon Tong 2024
---------------------------------------------------
+---@author gideontong
+---@copyright 2024 Gideon Tong
+------------------------------
 Xmoves = 0
 Ymoves = 0
 Zmoves = 0
@@ -14,7 +14,7 @@ Zwide = 0
 Direction = 0
 
 term.clear()
-term.blit("Diamond Miner 1.0", "01223456678899aab", "00000000000000000")
+term.blit("Ore Miner 1.0", "01123456789ab", "0000000000000")
 print("")
 term.blit("By Gideon Tong", "77766666666666", "00000000000000")
 print("")
@@ -28,7 +28,9 @@ LogLevels = {
     [4] = "CRIT"
 }
 
-function Log(log --[[string]] , level --[[integer]] )
+---@param log string
+---@param level integer
+function Log(log, level)
     if level >= LogLevel then
         if level >= 0 and level <= 4 then
             print(string.format("[%s] %s", LogLevels[level], log))
@@ -39,8 +41,9 @@ function Log(log --[[string]] , level --[[integer]] )
 end
 
 -- Index of min value of table
----@type integer
-function MinIndex(t --[[table]] )
+---@param t table
+---@return integer
+function MinIndex(t)
     local key, max = 1, t[1]
     for k, v in ipairs(t) do
         if t[k] > max then
@@ -50,9 +53,10 @@ function MinIndex(t --[[table]] )
     return key
 end
 
--- Table is full of zeros
----@type boolean
-function AllZero(t --[[table]] )
+-- Checks if table is full of zeros
+---@param t table
+---@return boolean
+function AllZero(t)
     for k, v in ipairs(t) do
         if v ~= 0 then
             return false
@@ -99,6 +103,8 @@ function MoveHome()
     end
 end
 
+---@param movesNeeded integer
+---@return integer
 function FuelUp(movesNeeded)
     local startFuel = turtle.getFuelLevel()
     local fuelLeft = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
@@ -120,6 +126,7 @@ function FuelUp(movesNeeded)
 end
 
 -- Returns early if out of fuel
+---@return boolean
 function ReturnEarly()
     local movesNeeded = math.abs(Xmoves) + math.abs(Ymoves) + math.abs(Zmoves)
     Log(string.format("Moved <%s, %s, %s> = %s @(%s, %s, %s) Fuel %s", Xmoves, Ymoves, Zmoves, movesNeeded, X, Y, Z,
@@ -135,7 +142,8 @@ function ReturnEarly()
 end
 
 -- 0: FORWARD, 1: RIGHT, 2: BACK, 3: LEFT
-function FaceDirection(direction --[[integer]] )
+---@param direction integer
+function FaceDirection(direction)
     if direction < 0 or direction > 3 then
         Log("Invalid direction provided, doing nothing", 2)
         return
@@ -147,7 +155,7 @@ function FaceDirection(direction --[[integer]] )
 end
 
 -- Sweeps one X-row of one Y-height (run Z times per Y)
----@type boolean
+---@return boolean
 function Sweep()
     local isReturnEarly = ReturnEarly()
     if Xmoves < Xwide then
@@ -172,7 +180,7 @@ function Sweep()
     return isReturnEarly
 end
 
----@type boolean
+---@return boolean
 function SweepY()
     local isReturnEarly = ReturnEarly()
     while Zmoves < Zwide and not isReturnEarly do
@@ -189,6 +197,7 @@ function SweepY()
 end
 
 -- For now, just dig the current height and the height below
+---@return boolean
 function OptimizeDistribution()
     local isReturnEarly = SweepY()
     if not isReturnEarly then
