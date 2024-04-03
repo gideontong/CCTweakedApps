@@ -65,7 +65,8 @@ function AllZero(t)
     return true
 end
 
-function MoveHome()
+function MoveHomeLateral()
+    Log("Returning to start XZ", 0)
     while Xmoves ~= 0 do
         if Xmoves > 0 then
             turtle.back()
@@ -73,15 +74,6 @@ function MoveHome()
         elseif Xmoves < 0 then
             turtle.forward()
             Xmoves = Xmoves + 1
-        end
-    end
-    while Ymoves ~= 0 do
-        if Ymoves > 0 then
-            turtle.down()
-            Ymoves = Ymoves - 1
-        elseif Ymoves < 0 then
-            turtle.up()
-            Ymoves = Ymoves + 1
         end
     end
     if Zmoves ~= 0 then
@@ -99,6 +91,19 @@ function MoveHome()
                 Zmoves = Zmoves + 1
             end
             turtle.turnRight()
+        end
+    end
+end
+
+function MoveHome()
+    MoveHomeLateral()
+    while Ymoves ~= 0 do
+        if Ymoves > 0 then
+            turtle.down()
+            Ymoves = Ymoves - 1
+        elseif Ymoves < 0 then
+            turtle.up()
+            Ymoves = Ymoves + 1
         end
     end
 end
@@ -201,6 +206,7 @@ end
 function OptimizeDistribution()
     local isReturnEarly = SweepY()
     if not isReturnEarly then
+        MoveHomeLateral()
         turtle.digDown()
         turtle.down()
         isReturnEarly = SweepY()
@@ -238,7 +244,7 @@ function Main()
     write("Length of dig site: ")
     Xwide = read()
     if tonumber(Xwide) ~= nil then
-        Xwide = tonumber(Xwide)
+        Xwide = tonumber(Xwide) - 1
     else
         Log("Not a valid input! Defaulting to 5.", 2)
         Xwide = 5
