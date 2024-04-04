@@ -209,6 +209,7 @@ function OptimizeDistribution()
         MoveHomeLateral()
         turtle.digDown()
         turtle.down()
+        Ymoves = Ymoves - 1
         isReturnEarly = SweepY()
     end
     return isReturnEarly
@@ -258,7 +259,9 @@ function Main()
         Zwide = 5
     end
     -- Run until out of fuel, then come home
-    OptimizeDistribution()
+    if not OptimizeDistribution() then
+        MoveHome()
+    end
 end
 
 Main()
